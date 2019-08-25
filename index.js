@@ -1,44 +1,31 @@
-/* SERVIDOR HTTP
- const http = require("http");
-
-http
-    .createServer((req, res) => {
-       console.log(req);
-        return res.end("Hello world!");
-    })
-    .listen(3000);*/
-const express = require("express");
-const nunjucks = require("nunjucks");
+const express = require('express');
+const nunjucks = require('nunjucks')
 
 const app = express();
-nunjucks.configure('views', {
-    autoescape: true,
-    express: app,
-    watch: true,
-});
-app.use(express.urlencoded({ extended: false }));
 
-app.set('view engine', "njk");
-/*app.get('/', (req, res) => {
-    return res.send(`Bem vindo, ${req.query.name}`);
-});*/
-const users = ['Pedro', 'Toin', 'Zé'];
+nunjucks.configure('views', {
+   autoescape: true, //Manipular nomes dos arquivos
+   express: app, //Variavel que contem o express
+   watch: true //Semelhante ao nodemon
+});
+//Informa ao express que será lido o corpo da requisição.
+app.use(express.urlencoded({ extended: false }))
+
+//set dentro de app define que é global
+app.set('view engine', 'njk') //njk define que a extensão que será usada.
+
+const users = ['Nome1', 'Nome2', 'Nome3']
 
 app.get('/', (req, res) => {
-    return res.render('list', { users })
-});
-app.get('/new', (req, res) => {
-        return res.render("new");
-    })
-    /*app.get('/json/:name', (req, res) => {
-        return res.json({
-            message: `Bem-vindo, ${req.params.name}`
-        });
-    });
-    */
-
-app.post('/create', (req, res) => {
-    users.push(req.body.user);
-    return res.redirect("/")
+   return res.render('list', { users })
 })
-app.listen(3000);
+
+app.get('/new', (req, res) => {
+   return res.render('new')
+})
+//Colocar o mesmo método utilizado no njk
+app.post('/create', (req, res) => {
+   users.push(req.body.newUser);//Adiciona info ao array
+   return res.redirect('/');// Redireciona para principal
+})
+app.listen(3002);
